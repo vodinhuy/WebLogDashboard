@@ -72,11 +72,62 @@ var user_interface = {
       bandwidth: { dataType: "bytes", label: "Tx. Amount" },
     },
   },
+  realtime_requests: {
+    head: "Total of request in 24 hours",
+    desc: "Top requests sorted by hits [, avgts, cumts, maxts, mthd, proto]",
+    id: "realtime_requests",
+    table: 1,
+    index: 0,
+    panelSize: "large",
+    sort: { field: "hits", order: "DESC" },
+    plot: [],
+    items: [
+      {
+        colWidth: "12%",
+        meta: "count",
+        dataType: "numeric",
+        key: "hits",
+        label: "Hits",
+      },
+      {
+        colWidth: "12%",
+        meta: "count",
+        dataType: "numeric",
+        key: "visitors",
+        label: "Visitors",
+      },
+      {
+        colWidth: "12%",
+        meta: "count",
+        dataType: "bytes",
+        key: "bytes",
+        label: "Tx. Amount",
+      },
+      { colWidth: "6%", dataType: "string", key: "method", label: "Method" },
+      {
+        colWidth: "7%",
+        dataType: "string",
+        key: "protocol",
+        label: "Protocol",
+      },
+      {
+        className: "trunc",
+        colWidth: "100%",
+        meta: "unique",
+        metaType: "numeric",
+        metaLabel: "Total",
+        dataType: "string",
+        key: "data",
+        label: "Data",
+      },
+    ],
+  },
   visitors: {
     head: "Unique visitors per day - Including spiders",
     desc: "Hits having the same IP, date and agent are a unique visit.",
     id: "visitors",
     table: 1,
+    index: 1,
     sort: { field: "data", order: "DESC" },
     plot: [
       {
@@ -133,83 +184,12 @@ var user_interface = {
       },
     ],
   },
-  realtime_requests: {
-    head: "Total of request in 24 hours",
-    desc: "Top requests sorted by hits [, avgts, cumts, maxts, mthd, proto]",
-    id: "realtime_requests",
-    table: 1,
-    sort: { field: "hits", order: "DESC" },
-    plot: [
-      {
-        className: "hits-visitors",
-        label: "Hits/Visitors",
-        chartType: "bar",
-        chartReverse: 0,
-        redrawOnExpand: 0,
-        d3: {
-          x: { key: ["method", "data", "protocol"] },
-          y0: { key: "hits", label: "Hits" },
-          y1: { key: "visitors", label: "Visitors" },
-        },
-      },
-      {
-        className: "bandwidth",
-        label: "Tx. Amount",
-        chartType: "bar",
-        chartReverse: 0,
-        redrawOnExpand: 0,
-        d3: {
-          x: { key: ["method", "protocol", "data"] },
-          y0: { key: "bytes", label: "Tx. Amount", format: "bytes" },
-        },
-      },
-    ],
-    items: [
-      {
-        colWidth: "12%",
-        meta: "count",
-        dataType: "numeric",
-        key: "hits",
-        label: "Hits",
-      },
-      {
-        colWidth: "12%",
-        meta: "count",
-        dataType: "numeric",
-        key: "visitors",
-        label: "Visitors",
-      },
-      {
-        colWidth: "12%",
-        meta: "count",
-        dataType: "bytes",
-        key: "bytes",
-        label: "Tx. Amount",
-      },
-      { colWidth: "6%", dataType: "string", key: "method", label: "Method" },
-      {
-        colWidth: "7%",
-        dataType: "string",
-        key: "protocol",
-        label: "Protocol",
-      },
-      {
-        className: "trunc",
-        colWidth: "100%",
-        meta: "unique",
-        metaType: "numeric",
-        metaLabel: "Total",
-        dataType: "string",
-        key: "data",
-        label: "Data",
-      },
-    ],
-  },
   requests: {
     head: "Requested Files (URLs)",
     desc: "Top requests sorted by hits [, avgts, cumts, maxts, mthd, proto]",
     id: "requests",
     table: 1,
+    index: 2,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -282,6 +262,7 @@ var user_interface = {
     desc: "Top static requests sorted by hits [, avgts, cumts, maxts, mthd, proto]",
     id: "static_requests",
     table: 1,
+    index: 3,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -354,6 +335,7 @@ var user_interface = {
     desc: "Top not found URLs sorted by hits [, avgts, cumts, maxts, mthd, proto]",
     id: "not_found",
     table: 1,
+    index: 4,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -426,6 +408,7 @@ var user_interface = {
     desc: "Top visitor hosts sorted by hits [, avgts, cumts, maxts]",
     id: "hosts",
     table: 1,
+    index: 5,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -487,6 +470,7 @@ var user_interface = {
     desc: "Top Operating Systems sorted by hits [, avgts, cumts, maxts]",
     id: "os",
     table: 1,
+    index: 6,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -548,6 +532,7 @@ var user_interface = {
     desc: "Top Browsers sorted by hits [, avgts, cumts, maxts]",
     id: "browsers",
     table: 1,
+    index: 7,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -609,6 +594,7 @@ var user_interface = {
     desc: "Data sorted by hour [, avgts, cumts, maxts]",
     id: "visit_time",
     table: 1,
+    index: 8,
     sort: { field: "data", order: "ASC" },
     plot: [
       {
@@ -670,6 +656,7 @@ var user_interface = {
     desc: "Top Referring Sites sorted by hits [, avgts, cumts, maxts]",
     id: "referring_sites",
     table: 1,
+    index: 9,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -731,6 +718,7 @@ var user_interface = {
     desc: "Top HTTP Status Codes sorted by hits [, avgts, cumts, maxts]",
     id: "status_codes",
     table: 1,
+    index: 10,
     sort: { field: "hits", order: "DESC" },
     plot: [
       {
@@ -851,7 +839,7 @@ var json_data = {
       },
     ],
   },
-  requests: {
+  realtime_requests: {
     metadata: {
       bytes: {
         total: { value: 2198907 },
@@ -874,6 +862,78 @@ var json_data = {
       data: { total: { value: 33 } },
     },
     data: [
+      {
+        hits: { count: 20, percent: "12.58" },
+        visitors: { count: 3, percent: "100.00" },
+        bytes: { count: 89021, percent: "3.94" },
+        method: "GET",
+        protocol: "HTTP/1.1",
+        data: "/dvwa/index.php",
+      },
+      {
+        hits: { count: 14, percent: "8.81" },
+        visitors: { count: 0, percent: "0.00" },
+        bytes: { count: 0, percent: "0.00" },
+        method: "---",
+        protocol: "---",
+        data: "-",
+      },
+      {
+        hits: { count: 13, percent: "8.18" },
+        visitors: { count: 1, percent: "33.33" },
+        bytes: { count: 1774419, percent: "78.53" },
+        method: "GET",
+        protocol: "HTTP/1.1",
+        data: "/report.html",
+      },
+      {
+        hits: { count: 20, percent: "12.58" },
+        visitors: { count: 3, percent: "100.00" },
+        bytes: { count: 89021, percent: "3.94" },
+        method: "GET",
+        protocol: "HTTP/1.1",
+        data: "/dvwa/index.php",
+      },
+      {
+        hits: { count: 14, percent: "8.81" },
+        visitors: { count: 0, percent: "0.00" },
+        bytes: { count: 0, percent: "0.00" },
+        method: "---",
+        protocol: "---",
+        data: "-",
+      },
+      {
+        hits: { count: 13, percent: "8.18" },
+        visitors: { count: 1, percent: "33.33" },
+        bytes: { count: 1774419, percent: "78.53" },
+        method: "GET",
+        protocol: "HTTP/1.1",
+        data: "/report.html",
+      },
+      {
+        hits: { count: 20, percent: "12.58" },
+        visitors: { count: 3, percent: "100.00" },
+        bytes: { count: 89021, percent: "3.94" },
+        method: "GET",
+        protocol: "HTTP/1.1",
+        data: "/dvwa/index.php",
+      },
+      {
+        hits: { count: 14, percent: "8.81" },
+        visitors: { count: 0, percent: "0.00" },
+        bytes: { count: 0, percent: "0.00" },
+        method: "---",
+        protocol: "---",
+        data: "-",
+      },
+      {
+        hits: { count: 13, percent: "8.18" },
+        visitors: { count: 1, percent: "33.33" },
+        bytes: { count: 1774419, percent: "78.53" },
+        method: "GET",
+        protocol: "HTTP/1.1",
+        data: "/report.html",
+      },
       {
         hits: { count: 20, percent: "12.58" },
         visitors: { count: 3, percent: "100.00" },

@@ -37,7 +37,7 @@
             this.AppData = (this.opts || {}).panelData || {};
             this.AppWSConn = (this.opts || {}).wsConnection || {};
             this.i18n = (this.opts || {}).i18n || {};
-            this.AppPrefs = { autoHideTables: true, layout: cw > 2560 ? "wide" : "horizontal", perPage: 7, theme: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "darkPurple" : "bright", hiddenPanels: [] };
+            this.AppPrefs = { autoHideTables: true, layout: cw > 2560 ? "wide" : "horizontal", perPage: 20, theme: window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "darkPurple" : "bright", hiddenPanels: [] };
             this.AppPrefs = GoAccess.Util.merge(this.AppPrefs, this.opts.prefs);
             this.wsDelay = this.currDelay = 1e3;
             this.maxDelay = 20e3;
@@ -776,9 +776,9 @@
             GoAccess.Tables.renderThead(panel, ui);
             return col;
         },
-        createCol: function (row) {
+        createCol: function (row, panelSize) {
             var layout = GoAccess.AppPrefs["layout"];
-            var perRow = "horizontal" == layout ? 6 : "wide" == layout ? 3 : 12;
+            var perRow = panelSize == "large" ? 12 : "horizontal" == layout ? 6 : "wide" == layout ? 3 : 12;
             var col = document.createElement("div");
             col.setAttribute("class", "col-md-" + perRow + " wrap-panel");
             row.appendChild(col);
@@ -813,7 +813,7 @@
             for (var panel in ui) {
                 if (GoAccess.Util.isPanelValid(panel) || GoAccess.Util.isPanelHidden(panel)) continue;
                 row = this.createRow(row, idx++);
-                col = this.createCol(row);
+                col = this.createCol(row, ui[panel].panelSize);
                 this.renderPanel(panel, ui[panel], col);
             }
         },
