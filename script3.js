@@ -49,7 +49,7 @@
             }
             if (Object.keys(this.AppWSConn).length) {
                 this.setWebSocket(this.AppWSConn);
-                this.setWebSocket2({ "url": "192.168.88.100", "port": 7899, "ping_interval": 0 });
+                this.setWebSocket2({ "url": "192.168.88.130", "port": 7899, "ping_interval": 0 });
             }
         },
         getPanelUI: function (panel) {
@@ -89,6 +89,7 @@
                 GoAccess.Nav.WSOpen(str);
             }.bind(this);
             socket.onmessage = function (event) {
+                console.log(event.data.length, event.data);
                 this.AppState["updated"] = true;
                 this.AppData = JSON.parse(event.data);
                 this.App.renderData();
@@ -110,6 +111,8 @@
             str = !/^wss?:\/\//i.test(str) ? (window.location.protocol === "https:" ? "wss://" : "ws://") + str : str;
             var socket = new WebSocket(str);
             socket.onopen = function (event) {
+                console.log("socket.onopen", str);
+                socket.send("load_logs");
                 this.currDelay = this.wsDelay;
                 this.retries = 0;
                 if (wsConn.ping_interval)
@@ -119,8 +122,22 @@
                 GoAccess.Nav.WSOpen(str);
             }.bind(this);
             socket.onmessage = function (event) {
+                var currentdate = new Date(); 
+                var datetime = currentdate.getDate() + "/"
+                    + (currentdate.getMonth() + 1) + "/"
+                    + currentdate.getFullYear() + " @ "
+                    + currentdate.getHours() + ":"
+                    + currentdate.getMinutes() + ":" 
+                    + currentdate.getSeconds();
+                $(".last-updated").innerHTML = datetime;
+                console.log('socket.onmessage');
+                console.log(event.data.length, event.data);
                 var data = JSON.parse(event.data);
                 console.log(data);
+                if (Array.isArray(data)) {
+                    GoAccess.getPanelData('realtime_requests').data.push(...data);
+                    console.log(data.length, 'new rows appended');
+                }
             }.bind(this);
             socket.onclose = function (event) {
                 window.clearInterval(pingId);
@@ -767,12 +784,14 @@
         },
         renderPanel: function (panel, ui, col) {
             var data = GoAccess.getPanelData(panel);
+            var ui = GoAccess.getPanelUI(panel);
+            var perPage = ui.perPage ? ui.perPage : GoAccess.getPrefs().perPage;
             this.setComputedData(panel, ui, data);
             var box = document.createElement("div");
             box.id = "panel-" + panel;
             box.innerHTML = GoAccess.AppTpls.Panels.wrap.render(GoAccess.Util.merge(ui, { labels: GoAccess.i18n }));
             col.appendChild(box);
-            if (data.data.length <= GoAccess.getPrefs().perPage) this.disablePagination(panel);
+            if (data.data.length <= perPage) this.disablePagination(panel);
             GoAccess.Tables.renderThead(panel, ui);
             return col;
         },
@@ -1203,18 +1222,25 @@
             return GoAccess.Util.getProp(GoAccess.AppState, panel + ".curPage") || 0;
         },
         pageOffSet: function (panel) {
-            return (this.getCurPage(panel) - 1) * GoAccess.getPrefs().perPage;
+            var ui = GoAccess.getPanelUI(panel);
+            var perPage = ui.perPage ? ui.perPage : GoAccess.getPrefs().perPage;
+            return (this.getCurPage(panel) - 1) * perPage;
         },
-        getTotalPages: function (dataItems) {
-            return Math.ceil(dataItems.length / GoAccess.getPrefs().perPage);
+        getTotalPages: function (panel, dataItems) {
+            var ui = GoAccess.getPanelUI(panel);
+            var perPage = ui.perPage ? ui.perPage : GoAccess.getPrefs().perPage;
+            return Math.ceil(dataItems.length / perPage);
         },
         getPage: function (panel, dataItems, page) {
-            var totalPages = this.getTotalPages(dataItems);
+            var ui = GoAccess.getPanelUI(panel);
+            var perPage = ui.perPage ? ui.perPage : GoAccess.getPrefs().perPage;
+            // var totalPages = this.getTotalPages(dataItems);
+            var totalPages = Math.ceil(dataItems.length / perPage);
             if (page < 1) page = 1;
             if (page > totalPages) page = totalPages;
             GoAccess.Util.setProp(GoAccess.AppState, panel + ".curPage", page);
             var start = this.pageOffSet(panel);
-            var end = start + GoAccess.getPrefs().perPage;
+            var end = start + perPage;
             return dataItems.slice(start, end);
         },
         prevPage: function (panel) {
@@ -1333,7 +1359,7 @@
         },
         togglePagination: function (panel, page, dataItems) {
             GoAccess.Panels.enablePagination(panel);
-            if (page >= this.getTotalPages(dataItems)) {
+            if (page >= this.getTotalPages(panel, dataItems)) {
                 GoAccess.Panels.disableNext(panel);
                 GoAccess.Panels.disableLast(panel);
             }
@@ -1346,7 +1372,7 @@
             var dataItems = GoAccess.getPanelData(panel).data;
             var ui = GoAccess.getPanelUI(panel);
             if (page === "LAST_PAGE") {
-                page = this.getTotalPages(dataItems);
+                page = this.getTotalPages(panel, dataItems);
             } else if (page === "FIRST_PAGE") {
                 page = 1;
             }
