@@ -1,1 +1,1 @@
-# WebLogMonitor
+# WebLogDashboard
