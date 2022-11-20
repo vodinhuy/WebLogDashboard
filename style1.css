@@ -23,6 +23,10 @@
     animation: fa-spin 2s infinite linear
 }
 
+.font-weight-bold {
+    font-weight: 700!important;
+}
+
 @-webkit-keyframes "fa-spin" {
     0% {
         -webkit-transform: rotate(0deg);

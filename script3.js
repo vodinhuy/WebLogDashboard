@@ -322,7 +322,13 @@
                 wrap.appendChild(row);
             }
             var box = document.createElement("div");
-            box.innerHTML = GoAccess.AppTpls.General.items.render({ id: x, className: ui.items[x].className, label: ui.items[x].label, value: GoAccess.Util.fmtValue(data[x], ui.items[x].dataType) });
+            box.innerHTML = GoAccess.AppTpls.General.items.render({
+                id: x,
+                className: ui.items[x].className,
+                label: ui.items[x].label,
+                value: GoAccess.Util.fmtValue(data[x],
+                    ui.items[x].dataType)
+            });
             row.appendChild(box);
             return row;
         },
@@ -1295,6 +1301,18 @@
                 var dataItem = dataItems[uiItem.key];
                 if (callback && typeof callback == "function") {
                     var ret = callback.call(this, panel, uiItem, dataItem);
+                    switch (ret.value) {
+                        case "Anomalous":
+                            ret.value = '<i class="bi-exclamation-triangle-fill"></i> Anomalous';
+                            ret.colorClass = 'font-weight-bold text-danger';
+                            break;
+                        case "Normal":
+                            ret.value = '<i class="bi-exclamation-circle-fill text-primary"></i> Normal';
+                            ret.colorClass = 'font-weight-bold text-primary';
+                            break;
+                        default:
+                            break;
+                    }
                     if (ret) out.push(ret);
                 }
             }
@@ -1343,6 +1361,7 @@
                 }
                 expanded = this.isExpanded(panel, GoAccess.Util.hashCode(data));
                 rows.push(this.renderRow(panel, cellcb, ui, dataItem, i, subItem, parentId, expanded));
+                // Render child items (if any)
                 if (dataItem.items && dataItem.items.length && expanded) {
                     this.renderRows(rows, panel, ui, dataItem.items, true, i, expanded);
                 }

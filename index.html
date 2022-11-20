@@ -14,6 +14,8 @@
     <title>Server&nbsp;Statistics</title>
     <link rel="stylesheet" href="style1.css">
     <link rel="stylesheet" href="style2.css">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -48,7 +50,7 @@
         type="text/template"><div class="col-md-2"><div class="grid-module {{#className}}{{className}}{{/className}}{{^className}}gray{{/className}}"><div class="col-title"><i class="fa fa-bar-chart"></i> {{#label}}{{label}}{{/label}}</div><h3 id="{{id}}" style="padding-top: 0;">{{value}}</h3></div></div></script>
     <!-- TPL Panel Table -->
     <script id="tpl-table-row"
-        type="text/template">{{#rows}}<tr class="{{#className}}{{className}}{{/className}} {{#hasSubItems}}{{#items}}expandable{{/items}}{{/hasSubItems}}" {{#idx}}data-pid="{{idx}}"{{/idx}} data-panel="{{panel}}" {{#key}}data-key="{{key}}"{{/key}}>{{#hasSubItems}}<td class="row-expandable text-center {{#items}}clickable{{/items}}">{{#items}}<i class="fa {{#expanded}}fa-caret-down{{/expanded}}{{^expanded}}fa fa-caret-right{{/expanded}}"></i>{{/items}}{{^items}}<i></i>{{/items}}</td>{{/hasSubItems}}<td class="row-idx text-right">{{#idx}}{{idx}}{{/idx}}</td>{{#cells}}<td class="{{className}}" {{#colspan}}colspan="{{colspan}}"{{/colspan}}><span class="value">{{value}}</span>{{#percent}}<span class="percent"> ({{percent}})</span>{{/percent}}</td>{{/cells}}</tr>{{/rows}}</script>
+        type="text/template">{{#rows}}<tr class="{{#className}}{{className}}{{/className}} {{#hasSubItems}}{{#items}}expandable{{/items}}{{/hasSubItems}}" {{#idx}}data-pid="{{idx}}"{{/idx}} data-panel="{{panel}}" {{#key}}data-key="{{key}}"{{/key}}>{{#hasSubItems}}<td class="row-expandable text-center {{#items}}clickable{{/items}}">{{#items}}<i class="fa {{#expanded}}fa-caret-down{{/expanded}}{{^expanded}}fa fa-caret-right{{/expanded}}"></i>{{/items}}{{^items}}<i></i>{{/items}}</td>{{/hasSubItems}}<td class="row-idx text-right">{{#idx}}{{idx}}{{/idx}}</td>{{#cells}}<td class="{{className}}" {{#colspan}}colspan="{{colspan}}"{{/colspan}}><span class="value {{colorClass}}">{{{value}}}</span>{{#percent}}<span class="percent"> ({{percent}})</span>{{/percent}}</td>{{/cells}}</tr>{{/rows}}</script>
     <!-- TPL Panel Table Meta -->
     <script id="tpl-table-row-meta"
         type="text/template">{{#row}}{{#hasSubItems}}<th class=""></th>{{/hasSubItems}}<th class="meta-label">{{key}}.</th>{{#cells}}<th class="{{className}}" {{#colspan}}colspan="{{colspan}}"{{/colspan}}>{{#value}}<span>{{value}} {{#percent}}<span class="text-muted">({{percent}}%)</span>{{/percent}}</span>{{/value}}{{^value}}<span class="text-muted">&mdash;</span>{{/value}}</th>{{/cells}}{{/row}}</script>
@@ -69,7 +71,7 @@
         type="text/template"><div class="row"><div class="col-md-12"><div class="form-group clearfix panel-header"><h4 class="pull-left hidden-xs gheader" id="{{id}}">{{head}}<br><small>{{desc}}</small></h4><h5 class="pull-left visible-xs hidden-sm hidden-md hidden-lg gheader" id="{{id}}">{{head}}<br><small>{{desc}}</small></h5><div class="panel-plot-wrap"><div class="dropdown"><button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-panel="{{id}}"><i class="fa fa-gear"></i> {{labels.panel_opts}} <span class="fa fa-caret-down"></span></button><ul class="dropdown-menu dropdown-menu-right panel-opts-{{id}}"></ul></div></div></div></div></div>{{#chart}}<div class="row"><div class="col-md-12"><div id="chart-{{id}}" class="chart-wrap"></div></div></div>{{/chart}}{{#table}}<div class="row clearfix table-wrapper {{#autoHideTables}}hidden-xs{{/autoHideTables}}"><div class="col-md-12"><div class="table-responsive"><table data-panel="{{id}}" class="table table-borderless table-hover table-{{id}}"><colgroup></colgroup><thead ><tr class="thead-cols"></tr><tr class="thead-min"></tr><tr class="thead-max"></tr><tr class="thead-avg"></tr></thead><tbody class="tbody-data"></tbody><tfoot class="tfoot-totals"><tr class="tfoot-totals"></tr></tfoot></table></div><ul class="pagination pagination-sm pull-left"><li class="disabled"><a class="panel-first" href="javascript:void(0);" aria-label="{{labels.first}}" data-panel="{{id}}" title="{{labels.first}}"><i class="fa fa-angle-double-left"></i></a></li><li class="disabled"><a class="panel-prev" href="javascript:void(0);" aria-label="{{labels.previous}}" data-panel="{{id}}" title="{{labels.previous}}"><i class="fa fa-angle-left"></i></a></li><li><a class="panel-next" href="javascript:void(0);" aria-label="{{labels.next}}" data-panel="{{id}}" title="{{labels.next}}"><i class="fa fa-angle-right"></i></a></li><li><a class="panel-last" href="javascript:void(0);" aria-label="{{labels.last}}" data-panel="{{id}}" title="{{labels.last}}"><i class="fa fa-angle-double-right"></i></a></li></ul></div></div>{{/table}}</script>
     <!-- TPL Nav Bar wrapper -->
     <script id="tpl-nav-wrap"
-        type="text/template"><div class="nav-list"></div><div class="nav-bars fa fa-bars"></div><div class="nav-gears fa fa-cog"></div><div class="nav-ws-status fa fa-circle"></div><div class="powered hidden-xs hidden-sm">by <a href="https://goaccess.io/">GoAccess</a> <span>v{{version}}</span> and <a href="http://gwsocket.io/">GWSocket</a></div></script>
+        type="text/template"><div class="nav-list"></div><div class="nav-bars fa fa-bars"></div><div class="nav-gears fa fa-cog"></div><div class="nav-ws-status fa fa-circle"></div><div class="powered hidden-xs hidden-sm"><a href="https://goaccess.io/"></a> <span></span><a href="http://gwsocket.io/"></a></div></script>
     <!-- TPL Nav Bar items -->
     <script id="tpl-nav-menu"
         type="text/template"><h3>{{labels.panels}}</h3><ul><li {{#overall_current}}class="active"{{/overall_current}}><a href="#"><i class="fa fa-bar-chart"></i> {{labels.thead}}</a><span title="{{labels.toggle_panel}}" class="toggle-panel {{#overall_hidden}}active{{/overall_hidden}}" data-panel="general"><i class="fa fa-circle-o"></i></span></li>{{#nav}}<li {{#current}}class="active"{{/current}}><a href="#{{key}}"><i class="fa fa-{{icon}}"></i> {{head}}</a><span title="{{labels.toggle_panel}}" class="toggle-panel {{#hidden}}active{{/hidden}}" data-panel="{{key}}"><i class="fa fa-circle-o"></i></span></li>{{/nav}}</ul></script>
@@ -87,6 +89,8 @@
     <script type="text/javascript" src="script2.js"></script>
     <script type="text/javascript" src="script3.js"></script>
     <script type="text/javascript" src="script4.js"></script>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
