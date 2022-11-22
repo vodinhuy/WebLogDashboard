@@ -332,7 +332,7 @@ nav h3 {
 }
 
 .container-fluid {
-    margin-left: 75px;
+    margin-left: 0px;
 }
 
 @media (min-width: 1120px) {

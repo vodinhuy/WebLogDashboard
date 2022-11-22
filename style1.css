@@ -27,6 +27,14 @@
     font-weight: 700!important;
 }
 
+.trunc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    max-width: 0;
+}
+
 @-webkit-keyframes "fa-spin" {
     0% {
         -webkit-transform: rotate(0deg);

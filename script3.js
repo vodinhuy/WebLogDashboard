@@ -122,22 +122,23 @@
                 GoAccess.Nav.WSOpen(str);
             }.bind(this);
             socket.onmessage = function (event) {
-                var currentdate = new Date(); 
-                var datetime = currentdate.getDate() + "/"
-                    + (currentdate.getMonth() + 1) + "/"
-                    + currentdate.getFullYear() + " @ "
-                    + currentdate.getHours() + ":"
-                    + currentdate.getMinutes() + ":" 
-                    + currentdate.getSeconds();
-                $(".last-updated").innerHTML = datetime;
                 console.log('socket.onmessage');
                 console.log(event.data.length, event.data);
                 var data = JSON.parse(event.data);
-                console.log(data);
-                if (Array.isArray(data)) {
-                    GoAccess.getPanelData('realtime_requests').data.push(...data);
-                    console.log(data.length, 'new rows appended');
+                let gitems = GoAccess.getPanelData("general");
+                gitems.total_requests = data.overall_stats.total;
+                gitems.valid_requests = data.overall_stats.normal;
+                gitems.failed_requests = data.overall_stats.anomal;
+                gitems.unique_visitors = data.overall_stats.uniq_visitors;
+                GoAccess.OverallStats.initialize();
+                if (data.items && Array.isArray(data.items)) {
+                    let items = data.items;
+                    items.reverse();
+                    GoAccess.getPanelData('realtime_requests').data.unshift(...items);
+                    console.log(items.length, 'new rows appended');
+                    GoAccess.Tables.renderTables();
                 }
+                $(".last-updated").innerHTML = data.overall_stats.date_time;
             }.bind(this);
             socket.onclose = function (event) {
                 window.clearInterval(pingId);
@@ -1301,17 +1302,17 @@
                 var dataItem = dataItems[uiItem.key];
                 if (callback && typeof callback == "function") {
                     var ret = callback.call(this, panel, uiItem, dataItem);
-                    switch (ret.value) {
-                        case "Anomalous":
-                            ret.value = '<i class="bi-exclamation-triangle-fill"></i> Anomalous';
-                            ret.colorClass = 'font-weight-bold text-danger';
-                            break;
-                        case "Normal":
-                            ret.value = '<i class="bi-exclamation-circle-fill text-primary"></i> Normal';
-                            ret.colorClass = 'font-weight-bold text-primary';
-                            break;
-                        default:
-                            break;
+                    if (uiItem.key == "label") {
+                        switch (ret.value) {
+                            case "Anomalous":
+                                ret.colorClass = 'font-weight-bold text-danger';
+                                break;
+                            case "Normal":
+                                ret.colorClass = 'font-weight-bold text-primary';
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     if (ret) out.push(ret);
                 }
@@ -1326,6 +1327,9 @@
         renderRow: function (panel, callback, ui, dataItem, idx, subItem, parentId, expanded) {
             var shadeParent = !subItem && idx % 2 != 0 ? "shaded" : "";
             var shadeChild = parentId % 2 != 0 ? "shaded" : "";
+            dataItem.icon = (dataItem.label == "Normal")
+                ? '<span class="text-primary"><i class="bi-exclamation-circle-fill"></i></span>'
+                : '<span class="text-danger"><i class="bi-exclamation-triangle-fill"></i></span>';
             return {
                 panel: panel,
                 idx: !subItem && String(idx + 1 + this.pageOffSet(panel)),
